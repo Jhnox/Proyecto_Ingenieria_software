@@ -1,0 +1,10 @@
+
+Deprecated: The each() function is deprecated. This message will be suppressed on further calls in C:\Users\Juan Uribe\AppData\Roaming\Sublime Text 3\Packages\PHPTools\php.tools\codeFormatter.php on line 54
+<?php
+include 'util/helpers.php';
+
+session_start();
+session_unset();
+session_destroy();
+
+redirigir("login.php");
