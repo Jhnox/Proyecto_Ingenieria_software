@@ -1,0 +1,15 @@
+
+Deprecated: The each() function is deprecated. This message will be suppressed on further calls in C:\Users\Juan Uribe\AppData\Roaming\Sublime Text 3\Packages\PHPTools\php.tools\codeFormatter.php on line 54
+<?php
+
+function conectar() {
+	$host     = "localhost";
+	$username = "root";
+	$passwd   = "12345678";
+	$dbname   = "aplicacionsaludable";
+	$conn     = new mysqli($host, $username, $passwd, $dbname);
+	if ($conn->connect_error) {
+		die('Error de conexión: '.$conn->connect_error);
+	}
+	return $conn;
+}

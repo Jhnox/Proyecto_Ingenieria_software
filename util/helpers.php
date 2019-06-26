@@ -1,0 +1,94 @@
+    <?php
+
+    session_start();
+    ob_start();
+
+    include 'db/db_funciones.php';
+
+
+    function is_valid_email($email)
+    {
+        return (false !== strpos($email, "@") && false !== strpos($email, "."));
+    }
+
+    function redirigir($pagina)
+    {
+        header('Location: http://localhost/apps/' . $pagina);
+        ob_end_flush();
+    }
+
+
+
+    function imprimir_menu_acceso()
+    {
+        if (isset($_SESSION['RUT_USUARIO'])) {
+            $RUT_USUARIO = $_SESSION['RUT_USUARIO'];
+            $name = obtener_nombre($RUT_USUARIO);
+            echo '<li><a href="logout.php">' . $name . ' (Salir)</a></li>';
+        } else {
+             echo '<li class="">
+                        <a class="" href="registro.php">Registrar</a>
+                    </li>
+                    ';
+                    echo '<li class="">
+                        <a class="" href="login.php">Acceder</a>
+                        </li>';
+        }
+    }
+    function imprimir_logo()
+    {
+        echo '<a class="navbar-brand" href="index.php"><img src="" alt=""></a>';
+    }
+
+    function imprimir_menu_todos()
+    {
+        echo '<li><a class="nav-link" href="index.php">Inicio</a></li>';
+    }
+
+
+
+    function imprimir_menu_privado()
+    {
+        if (isset($_SESSION['RUT_USUARIO'])) {
+            $RUT_USUARIO = $_SESSION['RUT_USUARIO'];
+            $id_rol = obtener_rut($RUT_USUARIO);
+            if ($id_rol == 1) {
+                echo ' <li class="dropdown">
+                              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Juegos<span class="caret"></span></a>
+                             <ul class="dropdown-menu">
+                                <li><a href="crear_categoria.php">Creacion de categoria</a></li><li><a href="editor_categoria.php">Editar una categoria</a></li><li role="separator" class="divider"></li><li><a href="subir_juego.php">Subir juego</a></li><li><a href="editor_juego.php">Editar Juego</a>
+                                </li>
+                                
+                            </ul>
+                        </li>';
+            } else {
+                echo '<li><a href="registro.php">Registro</a></li>';
+            }
+        }
+    }
+
+    function validar_admin()
+    {
+        if (isset($_SESSION['id_usuario'])) {
+            $id_usuario = $_SESSION['id_usuario'];
+            $id_rol = obtener_id_perfil($id_usuario);
+            if ($id_rol != 1) {
+                redirigir("user_home.php");
+            }
+        } else {
+            redirigir("login.php");
+        }
+    }
+
+    function validar_usuario()
+    {
+        if (isset($_SESSION['id_usuario'])) {
+            $id_usuario = $_SESSION['id_usuario'];
+            $id_rol = obtener_id_perfil($id_usuario);
+            if ($id_rol != 2) {
+                redirigir("admin_home.php");
+            }
+        } else {
+            redirigir("login.php");
+        }
+    }
