@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/Bootstrap.css">
     <link rel="stylesheet" href="css/fontawesome.css">
+    <link rel="stylesheet" href="w3/w3.css">
 
 
         
@@ -55,7 +56,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fas fa-user"></i></span>
                         </div>
-                        <input type="text" class="form-control" name="rut" id="rut" placeholder="Nombre de usuario">
+                        <input type="text" class="form-control" name="rut" id="rut" placeholder="Rut">
 
                     </div>
                     <div class="input-group form-group">
@@ -66,7 +67,8 @@
                     </div>
                     <div class="row align-items-center remember">
 
-                        <a href="registro.php">Registrase</a>
+                        <a class="w3-panel  w3-border-blue" href="registro.php">Registrase</a>
+                        <a class="w3-panel w3-border-left w3-border-blue" href="recuperar_pasword.php">Olvidó su Contraseña </a>
                     </div>
                     <br>
                     <div class="form-group">
@@ -77,7 +79,30 @@
                 </form>
             </div>
             <div class="card-footer">
-                
+                <?php
+                if ($_SERVER['REQUEST_METHOD'] == "POST") {
+                    $rut = $_POST["rut"];
+                    $pass = $_POST["pass"];
+                    $rt = iniciar_sesion($rut, $pass);
+                    if ($rt == false) {
+                        echo '<p class="alert alert-danger">';
+                        echo 'Rut y/o contraseña incorrectos';
+                        echo '</p>';
+                    } else {
+                        $_SESSION['RUT_USUARIO'] = $rt;
+                        $_SESSION['RUT_USUARIO'] = obtener_rut($rut);
+                        
+                        if ($_SESSION['id_perfil'] == 1) {
+                            // vamos a la página de administrador
+                            redirigir("index.php");
+                        } else {
+                            // vamos a la página de usuario normal
+                            redirigir("index.php");
+                        }
+                        redirigir("index.php");
+                    }
+                }
+                ?>
             </div>
         </div>
     </div>
@@ -85,29 +110,7 @@
 
 
 
-<?php
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    $rut = $_POST["rut"];
-    $pass = $_POST["pass"];
-    $rt = iniciar_sesion($rut, $pass);
-    if ($rt == false) {
-        echo '<p class="alert alert-danger">';
-        echo 'Rut y/o contraseña incorrectos';
-        echo '</p>';
-    } else {
-        $_SESSION['RUT_USUARIO'] = $rt;
-        $_SESSION['RUT_USUARIO'] = obtener_rut($rut);
-        if ($_SESSION['id_perfil'] == 1) {
-            // vamos a la página de administrador
-            redirigir("index.php");
-        } else {
-            // vamos a la página de usuario normal
-            redirigir("index.php");
-        }
-        redirigir("index.php");
-    }
-}
-?>
+
 
 
 

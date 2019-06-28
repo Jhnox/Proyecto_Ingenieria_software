@@ -13,7 +13,7 @@
 
     function redirigir($pagina)
     {
-        header('Location: http://localhost/apps/' . $pagina);
+        header('Location: http://10.26.5.237/apps/' . $pagina);
         ob_end_flush();
     }
 
@@ -24,25 +24,17 @@
         if (isset($_SESSION['RUT_USUARIO'])) {
             $RUT_USUARIO = $_SESSION['RUT_USUARIO'];
             $name = obtener_nombre($RUT_USUARIO);
-            echo '<li><a href="logout.php">' . $name . ' (Salir)</a></li>';
+            echo '<a class="w3-bar-item w3-button" href="logout.php">' . $name . ' (Salir)</a>';
         } else {
-             echo '<li class="">
-                        <a class="" href="registro.php">Registrar</a>
-                    </li>
-                    ';
-                    echo '<li class="">
-                        <a class="" href="login.php">Acceder</a>
-                        </li>';
+            echo '<a class="w3-bar-item w3-button" href="registro.php">Registrar</a>
+                    ','<a class="w3-bar-item w3-button" href="login.php">Acceder</a>';
         }
     }
-    function imprimir_logo()
-    {
-        echo '<a class="navbar-brand" href="index.php"><img src="" alt=""></a>';
-    }
+    
 
     function imprimir_menu_todos()
     {
-        echo '<li><a class="nav-link" href="index.php">Inicio</a></li>';
+        echo '<a class="w3-bar-item w3-button" href="index.php">Inicio</a>';
     }
 
 
@@ -51,23 +43,30 @@
     {
         if (isset($_SESSION['RUT_USUARIO'])) {
             $RUT_USUARIO = $_SESSION['RUT_USUARIO'];
-            $id_rol = obtener_rut($RUT_USUARIO);
+            $id_rol = obtener_rol($RUT_USUARIO);
             if ($id_rol == 1) {
-                echo ' <li class="dropdown">
-                              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Juegos<span class="caret"></span></a>
-                             <ul class="dropdown-menu">
-                                <li><a href="crear_categoria.php">Creacion de categoria</a></li><li><a href="editor_categoria.php">Editar una categoria</a></li><li role="separator" class="divider"></li><li><a href="subir_juego.php">Subir juego</a></li><li><a href="editor_juego.php">Editar Juego</a>
-                                </li>
-                                
-                            </ul>
-                        </li>';
+                echo '<a class="w3-bar-item w3-button" href="registro.php">Lista de Menus</a>';
+                echo '<a class="w3-bar-item w3-button" href="registro.php">Pedidos</a>';
+                echo '<a class="w3-bar-item w3-button" href="registro.php">Contacto</a>';
             } else {
-                echo '<li><a href="registro.php">Registro</a></li>';
+                echo '<a class="w3-bar-item w3-button" href="registro.php">Registro</a>';
             }
         }
     }
 
     function validar_admin()
+    {
+        if (isset($_SESSION['id_usuario'])) {
+            $id_usuario = $_SESSION['id_usuario'];
+            $id_rol = obtener_id_perfil($id_usuario);
+            if ($id_rol != 1) {
+                redirigir("user_home.php");
+            }
+        } else {
+            redirigir("login.php");
+        }
+    }
+    function recoverpass()
     {
         if (isset($_SESSION['id_usuario'])) {
             $id_usuario = $_SESSION['id_usuario'];
@@ -86,7 +85,7 @@
             $id_usuario = $_SESSION['id_usuario'];
             $id_rol = obtener_id_perfil($id_usuario);
             if ($id_rol != 2) {
-                redirigir("admin_home.php");
+                redirigir("index.php");
             }
         } else {
             redirigir("login.php");
