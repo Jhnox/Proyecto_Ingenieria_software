@@ -13,7 +13,7 @@
 
     function redirigir($pagina)
     {
-        header('Location: http://10.26.5.237/apps/' . $pagina);
+        header('Location: http://localhost/apps/' . $pagina);
         ob_end_flush();
     }
 
@@ -49,7 +49,9 @@
                 echo '<a class="w3-bar-item w3-button" href="registro.php">Pedidos</a>';
                 echo '<a class="w3-bar-item w3-button" href="registro.php">Contacto</a>';
             } else {
-                echo '<a class="w3-bar-item w3-button" href="registro.php">Registro</a>';
+                echo '<a class="w3-bar-item w3-button" href="registro.php">Lista de Menus</a>';
+                echo '<a class="w3-bar-item w3-button" href="registro.php">Pedidos</a>';
+                echo '<a class="w3-bar-item w3-button" href="registro.php">Contacto</a>';
             }
         }
     }
