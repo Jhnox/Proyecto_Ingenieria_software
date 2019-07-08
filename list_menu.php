@@ -2,7 +2,22 @@
         if (!isset($_SESSION['RUT_USUARIO'])) {
           redirigir('login.php');
         }
+
+        $rec = recuperarDatos();
+        $cont = contadorMenu();
+
+        
+
+
+
+
+
+
         ?>
+
+
+
+
         <!DOCTYPE html>
         <html lang="en">
 
@@ -21,7 +36,7 @@
           <script type="text/javascript" src="js/jquery-1.2.3.min.js"></script>
           <script type="text/javascript" src="js/jquery.func.js"></script>
 
-         
+
           <link rel="stylesheet" href="css/calendar.css" media="screen">
 
           <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
@@ -88,9 +103,29 @@
                 <div class="container">
                   <div class="w3-third w3-container">
                     <ul class="w3-ul w3-hoverable">
-                      <li onclick="document.getElementById('id01').style.display='block'" >Menu 1</li>
+                      <!-- <li onclick="document.getElementById('id01').style.display='block'" >Menu 1</li>
                       <li onclick="document.getElementById('id02').style.display='block'">Menu 2</li>
-                      <li onclick="document.getElementById('id03').style.display='block'">Menu 3</li>
+                      <li onclick="document.getElementById('id03').style.display='block'">Menu 3</li> -->
+                      
+                      <?php 
+
+                      for ($i=0; $i <= $cont ; $i++) { 
+                        $nomMenu = $rec[$i]['NOMBRE_MENU'];
+                        $j = $i+1;
+
+
+                        ?>
+                        <li onclick="document.getElementById('id0<?php echo "$j";?>').style.display='block'">
+                          <?php echo "$nomMenu" ?>
+                        </li>
+
+                        <?php 
+                      }
+                      ?>
+
+                      
+
+
                     </ul>
                   </div>
 
@@ -112,85 +147,51 @@
               <!-- FIN Calendario a la derecha -->
 
               <!-- Modal de informacion de los menus -->
-              
-              <div id="id01" class="w3-modal">
-               <div class="w3-modal-content w3-card-4 w3-animate-zoom">
-                <header class="w3-container w3-blue"> 
-                 <span onclick="document.getElementById('id01').style.display='none'" 
-                 class="w3-button w3-blue w3-xlarge w3-display-topright">&times;</span>
-                 <h2>Menu de 3500 calorias</h2>
-               </header>
 
-               <div class="w3-bar w3-border-bottom">
-                 <button class="tablink w3-bar-item w3-button" onclick="openCity(event, 'London')">London</button>
-                 <button class="tablink w3-bar-item w3-button" onclick="openCity(event, 'Paris')">Paris</button>
-                 <button class="tablink w3-bar-item w3-button" onclick="openCity(event, 'Tokyo')">Tokyo</button>
-               </div>
+              <?php 
 
-               <div id="London" class="w3-container city">
-                 <h1>London</h1>
-                 <p>London is the most populous city in the United Kingdom, with a metropolitan area of over 9 million inhabitants.</p>
-                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-               </div>
-
-               <div id="Paris" class="w3-container city">
-                 <h1>Paris</h1>
-                 <p>Paris is the capital of France.</p>
-                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-               </div>
-
-               <div id="Tokyo" class="w3-container city">
-                 <h1>Tokyo</h1>
-                 <p>Tokyo is the capital of Japan.</p><br>
-               </div>
-
-               <div class="w3-container w3-light-grey w3-padding">
-                 <button class="w3-button w3-right w3-white w3-border" 
-                 onclick="document.getElementById('id01').style.display='none'">Close</button>
-               </div>
-             </div>
-           </div>
-
-           <!-- Fin Modal de informacion de los menus -->
+              for ($i=0; $i <= $cont ; $i++) { 
+                $nomMenu = $rec[$i]['NOMBRE_MENU'];
+                $desc = $rec[$i]['DESCRIPCION_MENU'];
+                $j = $i+1;
 
 
-           <div id="id02" class="w3-modal">
+                ?>
+                <div id="id0<?php echo "$j";?>" class="w3-modal">
              <div class="w3-modal-content w3-card-4 w3-animate-zoom">
               <header class="w3-container w3-blue"> 
-               <span onclick="document.getElementById('id02').style.display='none'" 
+               <span onclick="document.getElementById('id0<?php echo "$j";?>').style.display='none'" 
                class="w3-button w3-blue w3-xlarge w3-display-topright">&times;</span>
                <h2> Menu de 2000 calorias</h2>
              </header>
 
              <div class="w3-bar w3-border-bottom">
-               <button class="tablink w3-bar-item w3-button" onclick="openCity(event, 'Chile')">Chile</button>
-               <button class="tablink w3-bar-item w3-button" onclick="openCity(event, 'Argentica')">Argentica</button>
-               <button class="tablink w3-bar-item w3-button" onclick="openCity(event, 'Zimbambuew')">Zimbambuew</button>
+               <button class="tablink w3-bar-item w3-button" onclick="openCity(event, '<?php echo "$nomMenu" ?>')"><?php echo "$nomMenu" ?></button>
              </div>
 
-             <div id="Chile" class="w3-container city">
-               <h1>Chile</h1>
-               <p>London is the most populous city in the United Kingdom, with a metropolitan area of over 9 million inhabitants.</p>
-               <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+             <div id="<?php echo "$nomMenu" ?>" class="w3-container city">
+               
+               <p><?php echo "$desc" ?></p>
              </div>
 
-             <div id="Argentica" class="w3-container city">
-               <h1>Argentica</h1>
-               <p>Paris is the capital of France.</p>
-               <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-             </div>
-
-             <div id="Zimbambuew" class="w3-container city">
-               <h1>Zimbambuew</h1>
-               <p>Tokyo is the capital of Japan.</p><br>
-             </div>
+             
 
              <div class="w3-container w3-light-grey w3-padding">
                <button class="w3-button w3-right w3-white w3-border" 
-               onclick="document.getElementById('id02').style.display='none'">Close</button>
+               onclick="document.getElementById('id0<?php echo "$j";?>').style.display='none'">Close</button>
              </div>
            </div>
          </div>
+
+                <?php 
+              }
+              ?>
+              
+
+           <!-- Fin Modal de informacion de los menus -->
+
+
+
 
        </div>
 

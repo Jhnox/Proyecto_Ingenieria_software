@@ -168,3 +168,50 @@
             return false;
         }
     }
+
+    function recuperarDatos(){
+        $conn = conectar();
+        $sql = "select * from menu";
+        $result = $conn->query($sql);
+
+        $cont = count($result);
+
+        
+
+        $conn->close();
+        if ($result->num_rows > 0) {
+            while ($fila = $result->fetch_assoc()) {
+                $menu[] = $fila;
+                
+                
+                
+                
+            }
+            return $menu;
+        } else {
+            return false;
+        }
+
+    }
+
+    function contadorMenu(){
+        $conn = conectar();
+        $sql = "select * from menu";
+        $result = $conn->query($sql);
+
+        #...$cont = count($result);
+
+        $conn->close();
+        if ($result->num_rows > 0) {
+            while ($fila = $result->fetch_assoc()) {
+                $cont = count($fila);
+                
+                    return $cont;
+                                
+                
+            }
+        } else {
+            return false;
+        }
+
+    }
