@@ -1,36 +1,37 @@
 <?php
 
-$rt = obtener_rut($rut);
 
-/*function validaRut($rut){
-    if(strpos($rut,"-")==false){
-        $RUT[0] = substr($rut, 0, -1);
-        $RUT[1] = substr($rut, -1);
-        $suma =null;
-    }else{
-        $RUT = explode("-", trim($rut));
-    }
-    $elRut = str_replace(".", "", trim($RUT[0]));
-    $factor = 2;
-    for($i = strlen($elRut)-1; $i >= 0; $i--):
-        $factor = $factor > 7 ? 2 : $factor;
-        $suma += $elRut{$i}*$factor++;
-    endfor;
-    $resto = $suma % 11;
-    $dv = 11 - $resto;
-    if($dv == 11){
-        $dv=0;
-    }else if($dv == 10){
-        $dv="k";
-    }else{
-        $dv=$dv;
-    }
-   if($dv == trim(strtolower($RUT[1]))){
-       return true;
-   }else{
-       return false;
-   }
-}*/
+
+// function validaRut($rut){
+//     if(strpos($rut,"-")==false){
+//         $RUT[0] = substr($rut, 0, -1);
+//         $RUT[1] = substr($rut, -1);
+//         $suma =null;
+//     }else{
+//         $RUT = explode("-", trim($rut));
+//     }
+//     $elRut = str_replace(".", "", trim($RUT[0]));
+//     $factor = 2;
+//     for($i = strlen($elRut)-1; $i >= 0; $i--):
+//         $factor = $factor > 7 ? 2 : $factor;
+//         $suma += $elRut{$i}*$factor++;
+//     endfor;
+//     $resto = $suma % 11;
+//     $dv = 11 - $resto;
+//     if($dv == 11){
+//         $dv=0;
+//     }else if($dv == 10){
+//         $dv="k";
+//     }else{
+//         $dv=$dv;
+//     }
+//    if($dv == trim(strtolower($RUT[1]))){
+//        return true;
+//    }else{
+//        return false;
+//    }
+// }
+
 
 
 
@@ -58,8 +59,20 @@ if (isset($_POST['submit'])) {
     } elseif ($rut === $rt) {
         echo 'El Rut ingresado ya se encuentra registrado';
     } else {
-        registrar($rut, $pass, $nombre, $apellido, $telefono, $email, $fech_nacimiento, $monto_disp, $peso, $altura);
+        $rutvalido= RutValidate($rut);
+        if ($rutvalido) {
+           registrar($rut, $pass, $nombre, $apellido, $telefono, $email, $fech_nacimiento, $monto_disp, $peso, $altura);
+        }else{
+            echo '<div class=" container d-flex justify-content-center card-body">';
+        echo '<p class="alert alert-danger" align="center">';
+        echo 'Debe ingresar un Rut Valido';
+        echo '</p>';
+        echo '</div>';
+        }
+        
+        //
     }
+
 
 
 

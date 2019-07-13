@@ -4,19 +4,11 @@
         }
 
         $rec = recuperarDatos();
+
         $cont = contadorMenu();
-
-        
-
-
-
-
 
 
         ?>
-
-
-
 
         <!DOCTYPE html>
         <html lang="en">
@@ -111,20 +103,18 @@
 
                       for ($i=0; $i <= $cont ; $i++) { 
                         $nomMenu = $rec[$i]['NOMBRE_MENU'];
+                        $id_menu = $rec[$i]['ID_MENU'];
+                        
+
                         $j = $i+1;
-
-
                         ?>
-                        <li onclick="document.getElementById('id0<?php echo "$j";?>').style.display='block'">
+                        <li style="cursor: pointer;" onclick="document.getElementById('id0<?php echo "$j";?>').style.display='block'">
                           <?php echo "$nomMenu" ?>
                         </li>
 
                         <?php 
                       }
                       ?>
-
-                      
-
 
                     </ul>
                   </div>
@@ -151,103 +141,135 @@
               <?php 
 
               for ($i=0; $i <= $cont ; $i++) { 
+                $id_menu = $rec[$i]['ID_MENU'];
                 $nomMenu = $rec[$i]['NOMBRE_MENU'];
                 $desc = $rec[$i]['DESCRIPCION_MENU'];
+
+                // Obtener los productos asociados a un menu
+                $ProdMenu = recuperarProductos($id_menu);
+                
+                //Obtener el nombre del producto
+                $prod = obtenerNomProducto($ProdMenu);
+
+
                 $j = $i+1;
-
-
                 ?>
+
                 <div id="id0<?php echo "$j";?>" class="w3-modal">
-             <div class="w3-modal-content w3-card-4 w3-animate-zoom">
-              <header class="w3-container w3-blue"> 
-               <span onclick="document.getElementById('id0<?php echo "$j";?>').style.display='none'" 
-               class="w3-button w3-blue w3-xlarge w3-display-topright">&times;</span>
-               <h2> Menu de 2000 calorias</h2>
-             </header>
+                 <div class="w3-modal-content w3-card-4 w3-animate-zoom">
+                  <header class="w3-container w3-blue"> 
+                   <span onclick="document.getElementById('id0<?php echo "$j";?>').style.display='none'" 
+                     class="w3-button w3-blue w3-xlarge w3-display-topright">&times;</span>
+                     <h2><?php echo "$nomMenu" ?></h2>
+                   </header>
 
-             <div class="w3-bar w3-border-bottom">
-               <button class="tablink w3-bar-item w3-button" onclick="openCity(event, '<?php echo "$nomMenu" ?>')"><?php echo "$nomMenu" ?></button>
-             </div>
+                   <div class="w3-bar w3-border-bottom">
+                    <?php 
+                    $cpro = contador_menu_produc($id_menu);
+                    // Obtener los productos asociados a un menu
+                      $ProdMenu = recuperarProductos($id_menu);
+                
+                      //Obtener el nombre del producto
+                      $prod = obtenerNomProducto2($ProdMenu);
 
-             <div id="<?php echo "$nomMenu" ?>" class="w3-container city">
-               
-               <p><?php echo "$desc" ?></p>
-             </div>
 
-             
 
-             <div class="w3-container w3-light-grey w3-padding">
-               <button class="w3-button w3-right w3-white w3-border" 
-               onclick="document.getElementById('id0<?php echo "$j";?>').style.display='none'">Close</button>
-             </div>
+
+
+                    for ($l=0; $l <= $cpro ; $l++) { 
+                      $id_menu = $rec[$l]['ID_MENU'];
+                      $nompro = $prod[$l]['NOMBRE_PRODUCTO']
+
+                    
+                     ?>
+
+                     <button class="tablink w3-bar-item w3-button" onclick="openCity(event, '<?php echo "$nomMenu" ?>')"><?php echo "$nompro" ?></button>
+
+                     <?php 
+                     }
+                      ?>
+                   </div>
+
+                   <div id="<?php echo "$nomMenu" ?>" class="w3-container city">
+
+                     <p><?php echo "$desc" ?></p>
+                     <p></p>
+                   </div>
+
+
+
+                   <div class="w3-container w3-light-grey w3-padding">
+                     <button class="w3-button w3-right w3-white w3-border" 
+                     onclick="document.getElementById('id0<?php echo "$j";?>').style.display='none'">Close</button>
+                   </div>
+                 </div>
+               </div>
+
+               <?php 
+             }
+             ?>
+
+
+             <!-- Fin Modal de informacion de los menus -->
+
+
+
+
            </div>
+
+
          </div>
 
-                <?php 
-              }
-              ?>
-              
+         <div class="w3-row w3-padding-64">
+          <div class="w3-twothird w3-container">
 
-           <!-- Fin Modal de informacion de los menus -->
+          </div>
+          <div class="w3-third w3-container">
 
-
-
-
-       </div>
-
-       
-     </div>
-
-     <div class="w3-row w3-padding-64">
-      <div class="w3-twothird w3-container">
-
-      </div>
-      <div class="w3-third w3-container">
-
-      </div> 
-    </div>
+          </div> 
+        </div>
 
 
 
-    <!-- Fin Contenido -->
+        <!-- Fin Contenido -->
 
-    <!-- Footer -->
+        <!-- Footer -->
 
-    <!-- Footer -->
-    <footer class="w3-center w3-black w3-padding-64 w3-opacity w3-hover-opacity-off">
+        <!-- Footer -->
+        <footer class="w3-center w3-black w3-padding-64 w3-opacity w3-hover-opacity-off">
 
-      <div class="w3-xlarge w3-section">
-        <i class="fa fa-facebook-official w3-hover-opacity"></i>
-        <i class="fa fa-instagram w3-hover-opacity"></i>
-        <i class="fa fa-snapchat w3-hover-opacity"></i>
-        <i class="fa fa-pinterest-p w3-hover-opacity"></i>
-        <i class="fa fa-twitter w3-hover-opacity"></i>
-        <i class="fa fa-linkedin w3-hover-opacity"></i>
-      </div>
-      <p>Powered by Juan</p>
-    </footer>
-    <!-- Fin Footer -->
+          <div class="w3-xlarge w3-section">
+            <i class="fa fa-facebook-official w3-hover-opacity"></i>
+            <i class="fa fa-instagram w3-hover-opacity"></i>
+            <i class="fa fa-snapchat w3-hover-opacity"></i>
+            <i class="fa fa-pinterest-p w3-hover-opacity"></i>
+            <i class="fa fa-twitter w3-hover-opacity"></i>
+            <i class="fa fa-linkedin w3-hover-opacity"></i>
+          </div>
+          <p>Powered by Juan</p>
+        </footer>
+        <!-- Fin Footer -->
 
 
 
 
 
-    <!-- Script del calendario -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="js/jquery-ui-datepicker.min.js"></script>
-    <script>
-      $('#calendar').datepicker({
-        inline: true,
-        firstDay: 1,
-        showOtherMonths: true,
-        dayNamesMin: ['Dom', 'Lun', 'Mar', 'Mier', 'Jue', 'Vie', 'Sab']
-      });
-    </script>
+        <!-- Script del calendario -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+        <script src="js/jquery-ui-datepicker.min.js"></script>
+        <script>
+          $('#calendar').datepicker({
+            inline: true,
+            firstDay: 1,
+            showOtherMonths: true,
+            dayNamesMin: ['Dom', 'Lun', 'Mar', 'Mier', 'Jue', 'Vie', 'Sab']
+          });
+        </script>
 
 
 
 
-    <script>
+        <script>
             // Script para abrir y cerrar el menu lateral
             function w3_open() {
               document.getElementById("mySidebar").style.display = "block";
@@ -277,6 +299,14 @@
               document.getElementById(cityName).style.display = "block";
               evt.currentTarget.classList.add("w3-light-grey");
             }
+
+            function salir(){
+           var respuesta=confirm("¿Desea usted realmente salir?");
+           if(respuesta==true)
+               window.location="logout.php";
+          else
+               return 0;
+          }
           </script>
 
 

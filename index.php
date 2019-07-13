@@ -136,7 +136,16 @@
             function w3_close() {
               document.getElementById("mySidebar").style.display = "none";
             }
+            function salir(){
+         var respuesta=confirm("¿Desea usted realmente salir?");
+         if(respuesta==true)
+             window.location="logout.php";
+        else
+             return 0;
+        }
           </script>
+
+          
 
 
           <!-- Optional JavaScript -->

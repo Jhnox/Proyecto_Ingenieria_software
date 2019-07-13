@@ -8,6 +8,7 @@
         // $pass = crypt($pass, "bloqueo");
         //$correo_usuario = obtener_email($rut);
         $rut_usuario = obtener_rut($rut);
+        
 
 
         $sql = "insert into usuario (RUT_USUARIO, NOMBRE_USUARIO, rol_ID, APELLIDO_USUARIO, MONTO_DISPONIBLE, FECHA_NACIMIENTO, PESO, ALTURA, PASS, TELEFONO, EMAIL)"
@@ -28,11 +29,59 @@
                 echo '</div>';
             }
         } else {
-            echo '<div class=" container d-flex justify-content-center card-body">';
-            echo '<p class="alert alert-info">';
-            echo 'El registro de ' . $rut . ' se ha completado satisfactoriamente';
+            echo '<div class="w3-text-white container d-flex justify-content-center ">';
+            echo '<p class="">';
+            echo '<a class="w3-bar-item w3-button" href="registrar_participante.php">Agregar Participantes</a>';
+            echo '<a class="w3-bar-item w3-button" href="index.php">Login</a>';
             echo '</p>';
             echo '</div>';
+            echo '<div class=" container d-flex justify-content-center card-body">';
+            echo '<p class="alert alert-info">';
+            echo 'El registro de ' . $nombre .' '.$apellido. ' se ha completado satisfactoriamente';
+            echo '</p>';
+            echo '</div>';
+            
+        }
+        $conn->close();
+    }
+
+     function agregar_participante($rut_usuario, $rut, $nombre, $apellido, $fech_naci, $peso, $altura)
+    {
+        $conn = conectar(); 
+        $rt_participante = recuperar_Participante($rut);
+        
+
+
+        $sql = "insert into participante (RUT_USUARIO, RUT, NOMBRE, APELLIDOS, FECHA_NACIMIENTO, PESO, ALTURA)"
+                . "values ('" . $rut_usuario ."','".$rut. "','" . $nombre . "','" . $apellido . "','".$fech_naci."',".$peso.",".$altura.")";
+
+        if ($conn->query($sql) === false) {
+            if (($rt_participante === $rut)) {
+                echo '<div class="container d-flex justify-content-center card-body">';
+                echo '<p class="alert alert-danger">';
+                echo 'El rut ya se encuentra registrado '.$rt_participante;
+                echo '</p>';
+                echo '</div>';
+            } else {
+                echo '<div class="container d-flex justify-content-center card-body">';
+                echo '<p class="alert alert-danger">';
+                echo 'Error al registrarse ' . $conn->error.' '.$rt_participante;
+                echo '</p>';
+                echo '</div>';
+            }
+        } else {
+            echo '<div class="w3-text-white container d-flex justify-content-center ">';
+            echo '<p class="">';
+            echo '<a class="w3-bar-item w3-button" href="registrar_participante.php">Agregar Participantes</a>';
+            echo '<a class="w3-bar-item w3-button" href="login.php">login</a>';
+            echo '</p>';
+            echo '</div>';
+            echo '<div class=" container d-flex justify-content-center card-body">';
+            echo '<p class="alert alert-info">';
+            echo 'Se agregó a  ' . $nombre .' '.$apellido. ' como un nuevo participante';
+            echo '</p>';
+            echo '</div>';
+            
         }
         $conn->close();
     }
@@ -117,7 +166,25 @@
             return false;
         }
     }
+function obtener_participante($rut)
+    {
+        $conn = conectar();
+        $sql = "select * from participante where rut = '" . $rut."'" ;
+        $result = $conn->query($sql);
+        $conn->close();
+        if ($result->num_rows > 0) {
+            while ($fila = $result->fetch_assoc()) {
+                $rut = $fila["rut"];
+                
+            }
+            return $rut;
+        } else {
+            return false;
+        }
+    }
+    
 
+     
     function obtener_rol($RUT_USUARIO)
     {
 
@@ -152,6 +219,23 @@
         }
     }
 
+    function obtener_apellido($rut)
+    {
+        $conn = conectar();
+        $sql = "select * from usuario where RUT_USUARIO = '" . $rut."'" ;
+        $result = $conn->query($sql);
+        $conn->close();
+        if ($result->num_rows > 0) {
+            while ($fila = $result->fetch_assoc()) {
+                $surname = $fila["APELLIDO_USUARIO"];
+                return $surname;
+            }
+        } else {
+            return false;
+        }
+    }
+
+
     function iniciar_sesion($rut, $pass)
     {
         $conn = conectar();
@@ -174,8 +258,6 @@
         $sql = "select * from menu";
         $result = $conn->query($sql);
 
-        $cont = count($result);
-
         
 
         $conn->close();
@@ -183,10 +265,7 @@
             while ($fila = $result->fetch_assoc()) {
                 $menu[] = $fila;
                 
-                
-                
-                
-            }
+             }
             return $menu;
         } else {
             return false;
@@ -194,12 +273,156 @@
 
     }
 
+
+
+   
+
     function contadorMenu(){
         $conn = conectar();
-        $sql = "select * from menu";
+        $sql = "select COUNT(*) n_reg from menu";
         $result = $conn->query($sql);
 
         #...$cont = count($result);
+
+        $conn->close();
+        if ($result->num_rows > 0) {
+            while ($fila = $result->fetch_assoc()) {
+                
+                
+                    return $fila["n_reg"];
+                                
+                
+            }
+        } else {
+            return false;
+        }
+
+    }
+
+    function recuperarProductos($id){
+        $conn = conectar();
+        $sql = "select ID_PRODUCTO from menu_producto where ID_MENU = ".$id;
+        $result = $conn->query($sql);
+
+        $conn->close();
+        if ($result->num_rows > 0) {
+            while ($fila = $result->fetch_assoc()) {
+                $prod = $fila["ID_PRODUCTO"];
+                
+            }
+            return $prod;  
+        } else {
+            return false;
+        }
+
+    }
+
+    //Recuperar Todos los datos de los participantes
+
+    
+     function recuperar_Participante($rut){
+        $conn = conectar();
+        $sql = "select * from participante where rut_usuario = '".$rut."'";
+        $result = $conn->query($sql);
+
+        $conn->close();
+        if ($result->num_rows > 0) {
+            while ($fila = $result->fetch_assoc()) {
+                $nombre_participante[] = $fila;
+                
+            }
+            return $nombre_participante;  
+        } else {
+            return false;
+        }
+
+    }
+
+    function contadorParticipantes($rut){
+        $conn = conectar();
+        $sql = "select COUNT(*) n_reg from participante WHERE rut_usuario = '".$rut."'";
+        $result = $conn->query($sql);
+
+        $conn->close();
+        if ($result->num_rows > 0) {
+            while ($fila = $result->fetch_assoc()) {
+                
+                return $fila["n_reg"];
+                                
+                
+            }
+        } else {
+            return false;
+        }
+
+    }
+
+     // FIN Recuperar Todos los datos de los participantes
+
+
+        function contador_menu_produc($ID_MENU){
+        $conn = conectar();
+        $sql = "select COUNT(*) n_reg from menu_producto WHERE ID_MENU = ".$ID_MENU;
+        $result = $conn->query($sql);
+
+        $conn->close();
+        if ($result->num_rows > 0) {
+            while ($fila = $result->fetch_assoc()) {
+                
+                return $fila["n_reg"];
+                                
+                
+            }
+        } else {
+            return false;
+        }
+
+    }
+
+
+
+    function obtenerNomProducto($id){
+        $conn = conectar();
+        $sql = "select * from producto where ID_PRODUCTO = ".$id;
+        $result = $conn->query($sql);
+
+        $conn->close();
+        if ($result->num_rows > 0) {
+            while ($fila = $result->fetch_assoc()) {
+                $nomP = $fila["NOMBRE_PRODUCTO"];
+                
+                   
+            }
+             return $nomP;
+        } else {
+            return false;
+        }
+
+    }
+    function obtenerNomProducto2($id){
+        $conn = conectar();
+        $sql = "select NOMBRE_PRODUCTO from producto where ID_PRODUCTO = ".$id;
+        $result = $conn->query($sql);
+
+        $conn->close();
+        if ($result->num_rows > 0) {
+            while ($fila = $result->fetch_assoc()) {
+                $nomP[] = $fila;
+                
+                
+                   
+            }print_r($id);
+             return $nomP;
+        } else {
+            return false;
+        }
+
+    }
+
+    function contadorproductos($id){
+        $conn = conectar();
+        $sql = "select * from producto where ID_PRODUCTO = ".$id;
+        $result = $conn->query($sql);
 
         $conn->close();
         if ($result->num_rows > 0) {

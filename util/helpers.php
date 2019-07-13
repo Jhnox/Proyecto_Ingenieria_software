@@ -11,9 +11,23 @@
         return (false !== strpos($email, "@") && false !== strpos($email, "."));
     }
 
+
+
+// Validar rut Chileno
+    function RutValidate($rut) {
+        $rut=str_replace('.', '', $rut);
+        if (preg_match('/^(\d{1,9})-((\d|k|K){1})$/',$rut,$d)) {
+            $s=1;$r=$d[1];for($m=0;$r!=0;$r/=10)$s=($s+$r%10*(9-$m++%6))%11;
+            return chr($s?$s+47:75)==strtoupper($d[2]);
+        }
+    }
+
+    // FIN Validar rut Chileno
+
+
     function redirigir($pagina)
     {
-        header('Location: http://192.168.43.59/apps/' . $pagina);
+        header('Location: http://192.168.1.23/apps/' . $pagina);
         ob_end_flush();
     }
 
@@ -24,10 +38,10 @@
         if (isset($_SESSION['RUT_USUARIO'])) {
             $RUT_USUARIO = $_SESSION['RUT_USUARIO'];
             $name = obtener_nombre($RUT_USUARIO);
-            echo '<a class="w3-bar-item w3-button" href="logout.php">' . $name . ' (Salir)</a>';
+            echo '<a  class="w3-bar-item w3-button" onclick="salir()">' . $name . ' (Salir)</a>';
         } else {
             echo '<a class="w3-bar-item w3-button" href="registro.php">Registrar</a>
-                    ','<a class="w3-bar-item w3-button" href="login.php">Acceder</a>';
+            ','<a class="w3-bar-item w3-button" href="login.php">Acceder</a>';
         }
     }
     
@@ -46,10 +60,13 @@
             $id_rol = obtener_rol($RUT_USUARIO);
             if ($id_rol == 1) {
                 echo '<a class="w3-bar-item w3-button" href="list_menu.php">Lista de Menus</a>';
+                echo '<a class="w3-bar-item w3-button" href="lista_participantes.php">Participantes</a>';
+                echo '<a class="w3-bar-item w3-button" href="crear_menu.php">Crear Menu</a>';
                 echo '<a class="w3-bar-item w3-button" href="registro.php">Pedidos</a>';
                 echo '<a class="w3-bar-item w3-button" href="registro.php">Contacto</a>';
             } else {
                 echo '<a class="w3-bar-item w3-button" href="list_menu.php">Lista de Menus</a>';
+                echo '<a class="w3-bar-item w3-button" href="lista_participantes.php">Participantes</a>';
                 echo '<a class="w3-bar-item w3-button" href="registro.php">Pedidos</a>';
                 echo '<a class="w3-bar-item w3-button" href="registro.php">Contacto</a>';
             }
@@ -96,48 +113,48 @@
 
 
     class calendario{
-    var $nombre_dias = array('Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado');
-    function calendario(){
+        var $nombre_dias = array('Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado');
+        function calendario(){
+            
+        }
         
-    }
-    
-    function mostrarBarra(){
+        function mostrarBarra(){
         //proximamente
-        ?>
-        <div id="barcal">
-        </div>
-        <?php
-    }
-    
-    function mostrar(){
-        date_default_timezone_set('America/Santiago');
-        $mes=date('m',time());
-        $anio=date('Y',time());
+            ?>
+            <div id="barcal">
+            </div>
+            <?php
+        }
+        
+        function mostrar(){
+            date_default_timezone_set('America/Santiago');
+            $mes=date('m',time());
+            $anio=date('Y',time());
         //dias mes anterior
-        if($mes==1){ $mes_anterior=12; $anio_anterior = $anio-1; }
-        else{ $mes_anterior = $mes-1; $anio_anterior = $anio; }
-        
-        $ultimo_dia_mes_anterior = date('t',mktime(0,0,0,$mes_anterior,1,$anio_anterior));
-        
-        $dia=1;
-        if(strlen($mes)==1) $mes='0'.$mes;
-        ?>
-        <table id="minical" cellpadding="0" cellspacing="0">
-        <thead>
-         <tr >
-          <th><?php echo $this->nombre_dias[0]?></th>
-          <th><?php echo $this->nombre_dias[1]?></th>
-          <th><?php echo $this->nombre_dias[2]?></th>
-          <th><?php echo $this->nombre_dias[3]?></th>
-          <th><?php echo $this->nombre_dias[4]?></th>
-          <th><?php echo $this->nombre_dias[5]?></th>
-          <th><?php echo $this->nombre_dias[6]?></th>
-         </tr>
-        </thead>
-        <tbody>
-        <?php
-    
-        
+            if($mes==1){ $mes_anterior=12; $anio_anterior = $anio-1; }
+            else{ $mes_anterior = $mes-1; $anio_anterior = $anio; }
+            
+            $ultimo_dia_mes_anterior = date('t',mktime(0,0,0,$mes_anterior,1,$anio_anterior));
+            
+            $dia=1;
+            if(strlen($mes)==1) $mes='0'.$mes;
+            ?>
+            <table id="minical" cellpadding="0" cellspacing="0">
+                <thead>
+                   <tr >
+                      <th><?php echo $this->nombre_dias[0]?></th>
+                      <th><?php echo $this->nombre_dias[1]?></th>
+                      <th><?php echo $this->nombre_dias[2]?></th>
+                      <th><?php echo $this->nombre_dias[3]?></th>
+                      <th><?php echo $this->nombre_dias[4]?></th>
+                      <th><?php echo $this->nombre_dias[5]?></th>
+                      <th><?php echo $this->nombre_dias[6]?></th>
+                  </tr>
+              </thead>
+              <tbody>
+                <?php
+                
+                
         $numero_primer_dia = date('w', mktime(0,0,0,$mes,$dia,$anio)); //numero dia en semana
         
         $ultimo_dia = date('t', mktime(0,0,0,$mes,$dia,$anio));
@@ -175,7 +192,7 @@
                 }else{
                     if($diames<10) $diames_con_cero='0'.$diames;
                     else $diames_con_cero=$diames;
-    
+                    
                     echo "<td>";
                     echo "<div class=\"headbox\"> \n";
                     echo $diames;
@@ -190,9 +207,9 @@
             echo "</tr> \n";
         }
         ?>
-         </tbody>
-        </table>
-        <?php
-    }
+    </tbody>
+</table>
+<?php
+}
 
 }

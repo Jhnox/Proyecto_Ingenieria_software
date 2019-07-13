@@ -8,6 +8,8 @@ function comprobar() {
 	return s1 && s2;
 }
 
+    
+
 
 
 function validar_passwd1() {

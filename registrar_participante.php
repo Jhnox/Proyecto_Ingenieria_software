@@ -2,19 +2,17 @@
         <?php
         if (isset($_POST['submit'])) {
             $rut = $_POST['rut'];
-            $pass = $_POST['pass'];
-            $pass2 = $_POST['pass2'];
             $nombre = $_POST['nombre'];
             $apellido = $_POST['apellido'];
-            $telefono = $_POST['telefono'];
-            $email = $_POST['email'];
             $fech_naci = $_POST['fech_naci'];
-            $monto_disp = $_POST['monto_disp'];
             $peso = $_POST['peso'];
             $altura = $_POST['altura'];
-            $_SESSION['rut']=$rut;
+
         }
+
         
+
+
         ?>
 
         <!DOCTYPE html>
@@ -44,7 +42,7 @@
               }
           </style>
 
-          <title>Registro</title>
+          <title>Registrar Participante</title>
       </head>
 
       <body >
@@ -85,22 +83,10 @@
                                 <input type="" class="form-control" id="rut" name="rut" 
                                 value="<?php if (isset($rut)) {
                                     echo($rut);
-                                } ?>" placeholder="12345678-9">
+                                } ?>" placeholder="123456789">
 
                             </div>
 
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label>Contraseña</label>
-                                <input type="password" class="form-control" id="pass" name="pass" placeholder="Contraseña">
-                                <span id="msj-pass"></span>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label>Repetir contraseña</label>
-                                <input type="password" class="form-control" id="pass2" name="pass2" placeholder="Repetir Contraseña">
-                                <span id="msj-pass2"></span>
-                            </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-md-6">
@@ -118,34 +104,6 @@
                         </div>
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="">Telefono</label>
-                                <input type="number" class="form-control" id="telefono" name="telefono" placeholder="912345678" value="<?php if (isset($telefono)) {
-                                    echo($telefono);
-                                } ?>">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="">E-mail</label>
-                                <input type="text" class="form-control" id="email" name="email" placeholder="juan@gmail.com" value="<?php if (isset($email)) {
-                                    echo($email);
-                                } ?>">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="">Fecha de Nacimiento</label>
-                                <input type="date" class="form-control" id="fech_naci" name="fech_naci" value="<?php if (isset($fech_naci)) {
-                                    echo($fech_naci);
-                                } ?>">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="">Monto Disponible ($)</label>
-                                <input type="number" class="form-control" id="monto_disp" name="monto_disp" placeholder="250000" value="<?php if (isset($monto_disp)) {
-                                    echo($monto_disp);
-                                } ?>">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
                                 <label for="">Peso (kg)</label>
                                 <input type="number" class="form-control" id="peso" name="peso" placeholder="73" value="<?php if (isset($peso)) {
                                     echo($peso);
@@ -158,22 +116,56 @@
                                 } ?>">
                             </div>
                         </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="">Fecha de Nacimiento</label>
+                                <input type="date" class="form-control" id="fech_naci" name="fech_naci" value="<?php if (isset($fech_naci)) {
+                                    echo($fech_naci);
+                                } ?>">
+                            </div>
+                        </div>
                         <div class="form-group">
                             <center>
-                                <button 
-                                    name="submit"
-                                    id="reg" 
                                     
+                                <button 
+                                    type="submit" 
+                                    name="submit"
                                     class="btn btn-primary">
                                     Registrarse
                                 </button>
+
+
                                 <button type="reset" class="btn btn-primary">Limpiar</button>
                             </center>
 
                         </div>
 
-                        <?php include('util/validaciones.php'); ?>
+                        <?php
+                            if ($_SERVER['REQUEST_METHOD'] == "POST") {
+                                $rut = $_POST["rut"];
+                                $nombre =$_POST["nombre"];
+                                $apellidos = $_POST["apellido"];
+                                $fech_naci = $_POST["fech_naci"];
+                                $peso = $_POST["peso"];
+                                $altura = $_POST['altura'];
+                                $rt = $_SESSION['rut'];
+                                $rut_participante = recuperar_Participante($rut);
+                                if ($rut_participante === $rut) {
+                                    echo '<div class="container d-flex justify-content-center card-body">';
+                                    echo '<p class="alert alert-danger">';
+                                    echo 'El rut ya se encuentra registrado '.$rut_participante;
+                                    echo '</p>';
+                                    echo '</div>';
+                                }else{
+                                    
+                                    agregar_participante($rt, $rut, $nombre, $apellido, $fech_naci, $peso, $altura);
+                                }
 
+                                
+                                    
+                                
+                            }
+                        ?>
                     </form>
 
                 </div>
@@ -183,8 +175,7 @@
     </div>
 </div>
 
-
-        <script>
+<script>
             // Script to open and close sidebar
             function w3_open() {
               document.getElementById("mySidebar").style.display = "block";
@@ -193,12 +184,18 @@
           function w3_close() {
               document.getElementById("mySidebar").style.display = "none";
           }
+
+          function salir(){
+         var respuesta=confirm("¿Desea usted realmente salir?");
+         if(respuesta==true)
+             window.location="logout.php";
+        else
+             return 0;
+        }
       </script>
 
       
 
-      
-     
 
 
 
@@ -208,13 +205,11 @@
 
 
 
+                                <!-- Optional JavaScript -->
+                                <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+                                <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+                                <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+                                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+                            </body>
 
-
-      <!-- Optional JavaScript -->
-      <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-  </body>
-
-  </html>
+                            </html>
