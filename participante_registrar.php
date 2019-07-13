@@ -83,7 +83,7 @@
                                 <input type="" class="form-control" id="rut" name="rut" 
                                 value="<?php if (isset($rut)) {
                                     echo($rut);
-                                } ?>" placeholder="123456789">
+                                } ?>" placeholder="12345678-9">
 
                             </div>
 
@@ -158,7 +158,16 @@
                                     echo '</div>';
                                 }else{
                                     
+                                    $rutvalido= RutValidate($rut);
+                                  if ($rutvalido) {
                                     agregar_participante($rt, $rut, $nombre, $apellido, $fech_naci, $peso, $altura);
+                                  }else{
+                                      echo '<div class=" container d-flex justify-content-center card-body">';
+                                  echo '<p class="alert alert-danger" align="center">';
+                                  echo 'Debe ingresar un Rut Valido';
+                                  echo '</p>';
+                                  echo '</div>';
+                                  }
                                 }
 
                                 
